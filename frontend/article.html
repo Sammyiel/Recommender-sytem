@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0 10%;
+            padding: 0;
+            background-color: #fff;
+        }
+        .header {
+            display: flex;
+            justify-content: flex-start;
+            padding: 10px;
+        }
+        
+        a#homeLink {
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+        }              
+        .main-article {
+            background-color: #f1f1f1;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            padding: 20px;
+            width: 80%;
+        }
+        .main-article-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            }
+            .main-article-text {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 5px;
+            }
+            .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+            }
+            .card {
+            background-color: #f1f1f1;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 20px;
+            text-decoration: none;
+            width: 300px;
+            }
+            .card:hover {
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+            }
+            .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            }
+            .card-text {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 5px;
+            }
+            </style>
+            
+            </head>
+            <body>
+                <div class="header">
+                    <a href="index.html" id="homeLink">Home</a>
+                </div>
+
+                <div class="main-article" id="mainArticle"></div>
+                <div class="container" id="newsContainer"></div>
+                <script>
+                    fetch('sample_data.json')
+                        .then(response => response.json())
+                            .then(newsData => {
+                                const urlParams = new URLSearchParams(window.location.search);
+                                const articleId = urlParams.get('id');
+                                const selectedArticle = newsData.find(article => article.id == articleId);
+
+                                const mainArticle = document.getElementById('mainArticle');
+                                mainArticle.innerHTML = `
+                                <div class="main-article-title">${selectedArticle.category}</div>
+                                <div class="main-article-text">${selectedArticle.headline}</div>
+                                <div class="main-article-text">${selectedArticle.authors}</div>
+                                <div class="main-article-text">${selectedArticle.short_description}</div>
+                                `;
+
+                            const container = document.getElementById('newsContainer');
+                            
+                            newsData
+                            .filter(article => article.id != articleId)
+                            .forEach(article => {
+                                const card = document.createElement('a');
+                                card.href = `article.html?id=${article.id}`;
+                                card.className = 'card';
+                                card.innerHTML = `
+                                <div class="card-title">${article.category}</div>
+                                <div class="card-text">${article.headline}</div>
+                                <br />
+                                <div class="card-text">${article.date}</div>
+                                `;
+                                container.appendChild(card);
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error fetching data:', error);
+                        });
+
+
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const articleId = urlParams.get("id");
+                    const selectedArticle = newsData.find(article => article.id == articleId);
+                
+                    const mainArticle = document.getElementById("mainArticle");
+                    mainArticle.innerHTML = `
+                        <div class="main-article-title">${selectedArticle.title}</div>
+                        <div class="main-article-text">${selectedArticle.date}</div>
+                        <div class="main-article-text">${selectedArticle.author}</div>
+                        <div class="main-article-text">${selectedArticle.description}</div>
+                    `;
+                
+                    const container = document.getElementById("newsContainer");
+                    newsData.filter(article => article.id != articleId).forEach(article => {
+                        const card = document.createElement("a");
+                        card.href = `article.html?id=${article.id}`;
+                        card.className = "card";
+                        card.innerHTML = `
+                            <div class="card-title">${article.title}</div>
+                            <div class="card-text">${article.date}</div>
+                            <div class="card-text">${article.author}</div>
+                        `;
+                        container.appendChild(card);
+                    });
+                </script>
+            </body>
+        </html>
+                
